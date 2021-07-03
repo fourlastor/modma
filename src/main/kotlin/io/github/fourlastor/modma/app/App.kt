@@ -11,13 +11,12 @@ import io.github.fourlastor.modma.download.DownloadScreen
 import io.github.fourlastor.modma.mods.ModsScreen
 import io.github.fourlastor.modma.routing.rememberRouter
 import io.github.fourlastor.modma.settings.SettingsScreen
-import io.github.fourlastor.modma.settings.SettingsState
-import io.github.fourlastor.modma.state.Manager
+import io.github.fourlastor.modma.settings.SettingsViewModel
 import io.github.fourlastor.modma.support.exhaustive
 import javax.inject.Inject
 
 class App @Inject constructor(
-    private val settingsManager: Manager<SettingsState>
+    private val settingsViewModel: SettingsViewModel
 ) {
     fun start() {
         Window(
@@ -40,7 +39,7 @@ class App @Inject constructor(
                             when (screen.configuration) {
                                 is Screen.Mods -> ModsScreen()
                                 is Screen.Download -> DownloadScreen()
-                                is Screen.Settings -> SettingsScreen(settingsManager)
+                                is Screen.Settings -> SettingsScreen(settingsViewModel)
                             }.exhaustive()
                         }
                     }

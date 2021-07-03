@@ -3,9 +3,10 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.10"
-    kotlin("kapt") version "1.5.10"
-
+    val kotlinVersion = "1.5.10"
+    kotlin("jvm") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
+    kotlin("plugin.serialization") version kotlinVersion
     id("org.jetbrains.compose") version "0.5.0-build228"
 }
 
@@ -27,7 +28,9 @@ dependencies {
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.10")
+    implementation("net.harawata:appdirs:1.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 }
 
 tasks.withType<KotlinCompile>() {
