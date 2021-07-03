@@ -1,5 +1,6 @@
 package io.github.fourlastor.modma.app
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -12,12 +13,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.vectorXmlResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun ScreenList(
+    currentScreen: Screen,
     onRoute: (Screen) -> Unit,
     modifier: Modifier,
 ) {
@@ -26,10 +29,12 @@ fun ScreenList(
             modifier = modifier
         ) {
             items(Screens.values()) { data ->
+                val background = if (currentScreen == data.screen) Color.LightGray else Color(0x00000000)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(2.dp)
+                        .background(background)
                         .clickable { onRoute(data.screen) }
                         .fillParentMaxWidth()
                         .padding(4.dp)

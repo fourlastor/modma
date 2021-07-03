@@ -11,35 +11,36 @@ import io.github.fourlastor.modma.download.DownloadScreen
 import io.github.fourlastor.modma.mods.ModsScreen
 import io.github.fourlastor.modma.routing.rememberRouter
 import io.github.fourlastor.modma.settings.SettingsScreen
+import io.github.fourlastor.modma.settings.SettingsState
+import io.github.fourlastor.modma.state.Manager
 import io.github.fourlastor.modma.support.exhaustive
 import javax.inject.Inject
 
-class App @Inject constructor() {
+class App @Inject constructor(
+    private val settingsManager: Manager<SettingsState>
+) {
     fun start() {
         Window(
             title = "ModMa",
         ) {
             MaterialTheme {
-                val router =
-                    rememberRouter<Screen>(
-                        initialConfiguration = { Screen.Mods }
-                    )
-
+                val router = rememberRouter<Screen>(initialConfiguration = { Screen.Settings })
                 Column {
-                    Row(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                        ScreenList(
-                            onRoute = { router.replaceCurrent(it) },
-                            modifier = Modifier.padding(4.dp)
-                                .width(150.dp)
-                                .fillMaxHeight()
-                        )
-                        Children(
-                            routerState = router.state
-                        ) { screen ->
+                    Children(
+                        routerState = router.state
+                    ) { screen ->
+                        Row(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                            ScreenList(
+                                currentScreen = screen.configuration,
+                                onRoute = { router.replaceCurrent(it) },
+                                modifier = Modifier.padding(4.dp)
+                                    .width(150.dp)
+                                    .fillMaxHeight()
+                            )
                             when (screen.configuration) {
                                 is Screen.Mods -> ModsScreen()
                                 is Screen.Download -> DownloadScreen()
-                                is Screen.Settings -> SettingsScreen()
+                                is Screen.Settings -> SettingsScreen(settingsManager)
                             }.exhaustive()
                         }
                     }
