@@ -27,6 +27,7 @@ dependencies {
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.10")
 }
 
 tasks.withType<KotlinCompile>() {
