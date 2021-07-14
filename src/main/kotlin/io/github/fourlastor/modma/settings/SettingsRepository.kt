@@ -35,7 +35,6 @@ class SettingsRepository @Inject constructor(
     }
 
     private fun configFile(): File {
-        println("${dirs.config}/config.json")
         return File(dirs.config, "config.json")
     }
 }
