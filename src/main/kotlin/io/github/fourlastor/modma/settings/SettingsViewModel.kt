@@ -1,40 +1,44 @@
 package io.github.fourlastor.modma.settings
 
 import io.github.fourlastor.modma.state.Manager
-import kotlinx.coroutines.*
+import io.github.fourlastor.modma.state.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
     private val manager: Manager<SettingsState>,
-) {
+) : ViewModel<SettingsState> {
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    fun start() = scope.launch {
-        val state = repository.read()
-        val managerAsync = async { manager.start() }
-        if (state != null) {
-            manager.update(ReplaceState(state))
-        }
+    override fun start() {
+        scope.launch {
+            val state = repository.read()
+            if (state != null) {
+                manager.update(ReplaceState(state))
+            }
 
-        awaitAll(
-            managerAsync,
-            async { manager.state.drop(1).collect { repository.save(it) } }
-        )
+            manager.state.drop(1).collect { repository.save(it) }
+        }
     }
 
-    val state = manager.state
+    override fun stop() {
+        scope.cancel()
+    }
 
-    fun saveEnabledMods(path: String) =
-        scope.launch {
-            manager.update(UpdateEnabledMods(path))
-        }
+    override val state = manager.state
 
-    fun saveDisabledMods(path: String) =
-        scope.launch {
-            manager.update(UpdateDisabledMods(path))
-        }
+    fun saveEnabledMods(path: String) {
+        manager.update(UpdateEnabledMods(path))
+    }
+
+    fun saveDisabledMods(path: String) {
+        manager.update(UpdateDisabledMods(path))
+    }
 }
 
