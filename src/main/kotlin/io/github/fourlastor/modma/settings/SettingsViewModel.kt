@@ -13,8 +13,9 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
     private val manager: Manager<SettingsState>,
+    dispatchers: Dispatchers,
 ) : ViewModel<SettingsState> {
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(dispatchers.Default)
 
     override fun start() {
         scope.launch {

@@ -13,9 +13,10 @@ import javax.inject.Singleton
 @Singleton
 class SettingsRepository @Inject constructor(
     private val dirs: Dirs,
+    private val dispatchers: Dispatchers,
 ) {
 
-    suspend fun read(): SettingsState? = withContext(Dispatchers.IO) {
+    suspend fun read(): SettingsState? = withContext(dispatchers.IO) {
         val file = configFile()
         if (file.exists()) {
             Json.decodeFromString<SettingsState>(file.readText())
@@ -24,7 +25,7 @@ class SettingsRepository @Inject constructor(
         }
     }
 
-    suspend fun save(state: SettingsState) = withContext(Dispatchers.IO) {
+    suspend fun save(state: SettingsState) = withContext(dispatchers.IO) {
         val configFile = configFile()
         if (!configFile.exists()) {
             configFile.parentFile.mkdirs()
